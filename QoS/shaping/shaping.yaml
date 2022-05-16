@@ -1,0 +1,58 @@
+---
+- name: AUTOMATIC ROUTERS CONFIG
+  hosts: Routers
+  connection: local
+  gather_facts: false
+   
+  tasks:
+         - name: CREATE ACCESS-LIST FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - ip access-list extended FOR_WEB_TCP
+                   lines:
+                         - permit tcp any any eq 80
+
+         - name: CREATE ACCESS-LIST FOR_UDP
+           ios_config:
+                   parents:
+                         - ip access-list extended FOR_UDP
+                   lines:
+                         - permit udp any any range 16384 32767
+
+         - name: CLASS-MAP_FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - class-map FOR_WEB_TCP
+                   lines:
+                         - match access-group name FOR_WEB_TCP
+        
+         - name: CLASS-MAP_FOR_UDP
+           ios_config:
+                   parents:
+                         - class-map FOR_UDP
+                   lines:
+                         - match access-group name FOR_UDP
+
+         - name: POLICY-MAP_CLASS_FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - policy-map OUT_E0/1
+                         - class FOR_WEB_TCP
+                   lines:
+                         - shape average 150k
+                  
+         - name: POLICY-MAP_CLASS_FOR_UDP
+           ios_config:
+                    parents:
+                         - policy-map OUT_E0/1
+                         - class FOR_UDP
+                    lines:
+                         - shape average 200k  
+        
+
+         - name: APPLY ON INTERFACE
+           ios_config:
+                   parents:
+                         - interface e0/1.10
+                   lines:
+                         - service-policy output OUT_E0/1

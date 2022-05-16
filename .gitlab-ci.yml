@@ -8,7 +8,7 @@
      tags:
         - tag1
      script:
-        - ansible-playbook -i ansible/hosts QoS/classification_marking/class_mark.yaml
+        - ansible-playbook -i ansible/hosts QoS/shaping/shaping.yaml
 
  generator_traffic_job:
      stage: test
@@ -30,7 +30,7 @@
      tags:
         - tag1
      script:
-       - ansible-playbook -i ansible/hosts QoS/classification_marking/test.yaml
+       - ansible-playbook -i ansible/hosts QoS/shaping/test.yaml
 
  info_gather_job:
      stage: info_gather

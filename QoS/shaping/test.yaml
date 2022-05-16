@@ -1,0 +1,17 @@
+---
+- name: AUTOMATIC ROUTERS CONFIG
+  hosts: Routers
+  connection: local
+  gather_facts: false
+   
+  tasks:
+         - name: RUN SHOW COMMANDS
+           ios_command:
+              commands:
+                - show policy-map interface e0/1 | section FOR_WEB
+                - show policy-map interface e0/1 | section FOR_UDP
+              wait_for:
+                - result[0] contains 'target shape rate 150000'
+                - result[1] contains 'target shape rate 200000'
+
+               
