@@ -16,7 +16,7 @@
         - tag1
      script:
         - ansible-playbook -i ansible/hosts QoS/tests/start_gen.yaml
-        - ITGSend QoS/tests/police_flow
+        - ITGSend QoS/tests/pol_flow
         - ansible-playbook -i ansible/hosts QoS/tests/copy.yaml
         - ITGDec res.txt > result_generator.txt
         - ITGDec res.txt
