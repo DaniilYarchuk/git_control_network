@@ -8,7 +8,7 @@
      tags:
         - tag1
      script:
-        - ansible-playbook -i ansible/hosts QoS/policing/policing.yaml
+        - ansible-playbook -i ansible/hosts QoS/CBWFQ/CBWFQ.yaml
 
  generator_traffic_job:
      stage: test
@@ -16,7 +16,7 @@
         - tag1
      script:
         - ansible-playbook -i ansible/hosts QoS/tests/start_gen.yaml
-        - ITGSend QoS/tests/pol_flow
+        - ITGSend QoS/tests/traffic_flow
         - ansible-playbook -i ansible/hosts QoS/tests/copy.yaml
         - ITGDec res.txt > result_generator.txt
         - ITGDec res.txt
@@ -30,7 +30,7 @@
      tags:
         - tag1
      script:
-       - ansible-playbook -i ansible/hosts QoS/policing/test.yaml
+       - ansible-playbook -i ansible/hosts QoS/CBWFQ/test.yaml
 
  info_gather_job:
      stage: info_gather
