@@ -8,8 +8,8 @@
          - name: RUN SHOW COMMANDS
            ios_command:
               commands:
-                - show policy-map interface e0/1 | section FOR_WEB
-                - show policy-map interface e0/1 | section FOR_UDP
+                - show policy-map interface e0/1.10 | section FOR_WEB_TCP
+                - show policy-map interface e0/1.10 | section FOR_UDP
               wait_for:
                 - result[0] contains 'target shape rate 150000'
                 - result[1] contains 'target shape rate 200000'
