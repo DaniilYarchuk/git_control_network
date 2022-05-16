@@ -1,0 +1,17 @@
+---
+- name: AUTOMATIC ROUTERS CONFIG
+  hosts: Routers
+  connection: local
+  gather_facts: false
+   
+  tasks:
+         - name: RUN SHOW COMMANDS
+           ios_command:
+              commands:
+                - show policy-map interface e0/1.10 | section FOR_WEB_TCP
+                - show policy-map interface e0/1.10 | section FOR_UDP
+              wait_for:
+                - result[0] contains 'cir 150000 bps'
+                - result[1] contains 'cir 200000 bps'
+
+               

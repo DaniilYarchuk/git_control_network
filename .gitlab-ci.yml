@@ -8,7 +8,7 @@
      tags:
         - tag1
      script:
-        - ansible-playbook -i ansible/hosts QoS/shaping/shaping.yaml
+        - ansible-playbook -i ansible/hosts QoS/policing/policing.yaml
 
  generator_traffic_job:
      stage: test
@@ -16,7 +16,7 @@
         - tag1
      script:
         - ansible-playbook -i ansible/hosts QoS/tests/start_gen.yaml
-        - ITGSend QoS/tests/traffic_flow
+        - ITGSend QoS/tests/police_flow
         - ansible-playbook -i ansible/hosts QoS/tests/copy.yaml
         - ITGDec res.txt > result_generator.txt
         - ITGDec res.txt
@@ -30,7 +30,7 @@
      tags:
         - tag1
      script:
-       - ansible-playbook -i ansible/hosts QoS/shaping/test.yaml
+       - ansible-playbook -i ansible/hosts QoS/policing/test.yaml
 
  info_gather_job:
      stage: info_gather
