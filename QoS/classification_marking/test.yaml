@@ -1,0 +1,26 @@
+---
+- name: AUTOMATIC ROUTERS CONFIG
+  hosts: Routers
+  connection: local
+  gather_facts: false
+   
+  tasks:
+         - name: TEST ROUTER_1
+           ios_command:
+              commands:
+                - show policy-map interface e0/1.10 | section FOR_WEB_TCP
+                - show policy-map interface e0/1.10 | section FOR_UDP
+              wait_for:
+                - result[0] contains 'precedence 2'
+                - result[1] contains 'dscp ef'
+           when: inventory_hostname=="Router_1"
+
+         - name: TEST ROUTER_2
+           ios_command:
+              commands:
+                - show policy-map interface e0/1.10 | section FOR_PRECEDENCE_2
+              wait_for:
+                - result[0] contains 'precedence 3'
+           when: inventory_hostname=="Router_2"
+
+               

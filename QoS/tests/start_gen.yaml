@@ -1,0 +1,12 @@
+---
+- name: START GENERATOR
+  gather_facts: false
+  hosts: Linux
+  tasks:
+
+  - name: START GENERATOR
+    shell: "ITGRecv -l res.txt"
+    args:
+     chdir: /root/result_tests
+    async: 999999
+    poll: 0

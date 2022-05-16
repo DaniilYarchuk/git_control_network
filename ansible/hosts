@@ -1,0 +1,20 @@
+[Routers]
+Router_1 ansible_host=192.168.15.1 
+Router_2 ansible_host=192.168.16.1
+
+[Switches]
+Switch_1 ansible_host=192.168.15.2
+Switch_2 ansible_host=192.168.16.2
+
+[Linux]
+Lin_2 ansible_host=192.168.16.40 ansible_user=root ansible_password=root
+
+[Network_devices:children]
+Routers
+Switches
+
+[Network_devices:vars]
+ansible_network_os="ios"
+ansible_connection="network_cli"
+ansible_user=admin
+ansible_password=cisco

@@ -1,0 +1,88 @@
+---
+- name: AUTOMATIC ROUTERS CONFIG
+  hosts: Routers
+  connection: local
+  gather_facts: false
+   
+  tasks:
+
+    - name: SETUP CLASIFFING AND MARKING ON ROUTER_1
+      block:
+         - name: CREATE ACCESS-LIST FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - ip access-list extended FOR_WEB_TCP
+                   lines:
+                         - permit tcp any any eq 80
+
+         - name: CREATE ACCESS-LIST FOR_UDP
+           ios_config:
+                   parents:
+                         - ip access-list extended FOR_UDP
+                   lines:
+                         - permit udp any any range 16384 32767
+
+         - name: CLASS-MAP_FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - class-map FOR_WEB_TCP
+                   lines:
+                         - match access-group name FOR_WEB_TCP
+        
+         - name: CLASS-MAP_FOR_UDP
+           ios_config:
+                   parents:
+                         - class-map FOR_UDP
+                   lines:
+                         - match access-group name FOR_UDP
+
+         - name: POLICY-MAP_CLASS_FOR_WEB_TCP
+           ios_config:
+                   parents:
+                         - policy-map OUT_E0/1
+                         - class FOR_WEB_TCP
+                   lines:
+                         - set ip precedence 2
+                  
+         - name: POLICY-MAP_CLASS_FOR_UDP
+           ios_config:
+                    parents:
+                         - policy-map OUT_E0/1
+                         - class FOR_UDP
+                    lines:
+                         - set ip dscp ef  
+        
+         - name: APPLY ON INTERFACE
+           ios_config:
+                   parents:
+                         - interface e0/1.10
+                   lines:
+                         - service-policy output OUT_E0/1   
+      when: inventory_hostname == "Router_1"
+
+
+
+    - name: SETUP CLASIFFING AND MARKING ON ROUTER_2
+      block:
+       - name: CLASS-MAP_FOR_PRECEDENCE_2
+         ios_config:
+                   parents:
+                         - class-map FOR_PRECEDENCE_2
+                   lines:
+                         - match precedence 2
+
+       - name: POLICY-MAP_FOR_INTERFACE_E0/1
+         ios_config:
+                   parents:
+                         - policy-map OUT_E0/1
+                         - class FOR_PRECEDENCE_2
+                   lines:
+                         - set ip precedence 3
+
+       - name: APPLY ON INTERFACE
+         ios_config:
+                   parents:
+                         - interface e0/1.10
+                   lines:
+                         - service-policy output OUT_E0/1
+      when: inventory_hostname == "Router_2"

@@ -1,0 +1,11 @@
+---
+- name: TEST
+  gather_facts: false
+  hosts: Linux
+  tasks:
+
+  - name: COPY
+    fetch:
+     src: "/root/result_tests/res.txt"
+     dest: "../../res.txt"
+     flat: yes

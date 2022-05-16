@@ -1,0 +1,16 @@
+---
+- name: TEST
+  gather_facts: false
+  hosts: Network_devices
+  tasks:
+
+  - name: DISPLAYING THE RUNNING-CONFIG
+    ios_command:
+      commands:
+        - show running-config
+    register: config
+
+  - name: SAVE OUTPUT
+    copy:
+      content: "{{ config.stdout[0] }}"
+      dest: "configs/{{ inventory_hostname }}.txt"

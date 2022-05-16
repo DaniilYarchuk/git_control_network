@@ -1,0 +1,44 @@
+ stages:
+   - apply_config
+   - test
+   - info_gather
+
+ ansible_job:
+     stage: apply_config
+     tags:
+        - tag1
+     script:
+        - ansible-playbook -i ansible/hosts QoS/classification_marking/class_mark.yaml
+
+ generator_traffic_job:
+     stage: test
+     tags:
+        - tag1
+     script:
+        - ansible-playbook -i ansible/hosts QoS/tests/start_gen.yaml
+        - ITGSend QoS/tests/traffic_flow
+        - ansible-playbook -i ansible/hosts QoS/tests/copy.yaml
+        - ITGDec res.txt > result_generator.txt
+        - ITGDec res.txt
+        - ansible-playbook -i ansible/hosts QoS/tests/kill_gen.yaml 
+     artifacts:
+       paths:
+        - result_generator.txt
+
+ test_config_job:
+     stage: test
+     tags:
+        - tag1
+     script:
+       - ansible-playbook -i ansible/hosts QoS/classification_marking/test.yaml
+
+ info_gather_job:
+     stage: info_gather
+     tags:
+        - tag1
+     script:
+        - mkdir configs
+        - ansible-playbook -i ansible/hosts QoS/tests/info_gather.yaml
+     artifacts:
+       paths:
+        - configs

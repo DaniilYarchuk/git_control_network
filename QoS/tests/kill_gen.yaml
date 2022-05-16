@@ -1,0 +1,12 @@
+---
+- name: KILL GENERATOR TRAFFIC
+  gather_facts: false
+  hosts: Linux
+  tasks:
+
+    - name: NUMBER PROCCESS
+      shell: pgrep -l "ITGRecv" | cut -d' ' -f1
+      register: number_proccess
+
+    - name: KILL PID
+      shell: "kill -9 {{ number_proccess.stdout}}"
